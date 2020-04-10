@@ -23,7 +23,7 @@
         android:layout_marginRight="21dp"
         android:gravity="center|right"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/buttonFirst"
+        app:layout_constraintEnd_toStartOf="@+id/SF_buttonFirst"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
@@ -34,7 +34,7 @@
         android:layout_marginLeft="1dp"
         android:layout_marginTop="1dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonFirst" />
+        app:layout_constraintTop_toBottomOf="@+id/SF_buttonFirst" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
