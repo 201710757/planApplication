@@ -131,7 +131,7 @@ public class FirstFragment extends Fragment {
                 // 아이콘 설정
                 //alert.setIcon(R.drawable.ic_launcher);
                 // 타이틀
-                alert.setTitle("제목");
+                //alert.setTitle("");
                 // 다이얼로그 보기
                 alert.show();
 
