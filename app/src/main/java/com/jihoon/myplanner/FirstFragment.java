@@ -106,6 +106,7 @@ public class FirstFragment extends Fragment {
                 intent.putExtra("_ID", resId);
                 intent.putExtra("ST", position);
                 startActivityForResult(intent, 2);
+                ((MainActivity)getActivity()).refresh();
 
                 Log.d(TAG, "request code : " + 2);
             }
@@ -128,6 +129,7 @@ public class FirstFragment extends Fragment {
                         ((MainActivity)getActivity()).refresh();
                         //Intent intent = new Intent(getContext(), MainActivity.class);
                         //startActivity(intent);
+                        ((MainActivity)getActivity()).refresh();
                     }
                 });
 
@@ -224,6 +226,7 @@ public class FirstFragment extends Fragment {
                         tmpTodo = res[1];
 
                         listUpdateCheckBox_(tmpYear, tmpMonth, tmpDay);
+                        ((MainActivity)getActivity()).refresh();
                     }
                 };
                 Log.d(TAG, "dd : " + dat[0] + " " + dat[1] + " " + dat[2]);
@@ -257,12 +260,14 @@ public class FirstFragment extends Fragment {
                     String sql = String.format("INSERT INTO dateTodo VALUES(null, '" + LastYear + "','" + LastMonth + "','" + LastDay + "','" + title + "','" + todo + "');");
                     //String sql_ = String.format("UPDATE dateTodo SET title = '" + title + "', todo = '" + todo + "' where _id = " + id);
                     db.execSQL(sql);
+                    Log.d(TAG, "First SQL = " + sql);
                 }
                 catch (Exception e)
                 {
                     Log.d(TAG, e.getMessage());
                 }
                 listUpdateCheckBox_(LastYear,LastMonth,LastDay);
+                ((MainActivity)getActivity()).refresh();
             }
         }
         else if(requestCode == 2)//일정수정 / 리스트 클릭해서 팝업띄웠을때
@@ -286,6 +291,7 @@ public class FirstFragment extends Fragment {
                     Log.d(TAG, e.getMessage());
                 }
                 listUpdateCheckBox_(LastYear, LastMonth,LastDay);
+                ((MainActivity)getActivity()).refresh();
             }
         }
     }
