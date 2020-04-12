@@ -1,6 +1,8 @@
 package com.jihoon.myplanner;
 
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,10 @@ import androidx.fragment.app.Fragment;
 
 public class ThirdFragment extends Fragment {
     // Store instance variables
-    private String title;
-    private int page;
+
+    DBHelper dbHelper;
+    SQLiteDatabase db = null;
+    Cursor cursor;
 
     // newInstance constructor for creating fragment with arguments
     public static ThirdFragment newInstance(int page, String title) {
@@ -28,9 +32,6 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
-
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -38,8 +39,12 @@ public class ThirdFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_third, container, false);
-        EditText tvLabel = (EditText) view.findViewById(R.id.editText3);
-        tvLabel.setText(page + " -- " + title);
+        dbHelper = new DBHelper(view.getContext(), 1);
+        db = dbHelper.getWritableDatabase();
+
+
+
+
         return view;
     }
 }

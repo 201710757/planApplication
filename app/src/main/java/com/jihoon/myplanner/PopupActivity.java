@@ -63,14 +63,19 @@ public class PopupActivity extends Activity {
                     String tmpTitle = title.getText().toString();
                     String tmpTodo = todo.getText().toString();
 
-                    Intent intent = new Intent();
-                    intent.putExtra("TITLE", tmpTitle);
-                    intent.putExtra("TODO", tmpTodo);
-                    if(_id != -1)
-                        intent.putExtra("_ID", _id);
-                    setResult(RESULT_OK, intent);
+                    if(!tmpTitle.equals(""))
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("TITLE", tmpTitle);
+                        intent.putExtra("TODO", tmpTodo);
+                        if(_id != -1)
+                            intent.putExtra("_ID", _id);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    else finish();
                     //액티비티(팝업) 닫기
-                    finish();
+
                 }
                 catch (Exception e)
                 {

@@ -81,4 +81,10 @@ public class ListViewAdapter extends BaseAdapter {
         int res = listViewItemList.get(pos).getId();
         return res;
     }
+    // 그지
+    public String returnTitle(int pos)
+    {
+        String res = listViewItemList.get(pos).getTitle();
+        return res;
+    }
 }

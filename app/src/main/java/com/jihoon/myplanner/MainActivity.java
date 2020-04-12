@@ -1,5 +1,6 @@
 package com.jihoon.myplanner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -8,12 +9,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Window;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -21,7 +24,8 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
     FragmentPagerAdapter adapterViewPager;
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
-
+    ViewPager vpPager;
+    String TAG = "jihoonDebugging";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +33,41 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-
-
-
-
-        ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+        vpPager = (ViewPager) findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
 
+        vpPager.setCurrentItem(0);
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+               //HERE!
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d(TAG, "((((((((((((SELECTED! : " + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.d(TAG, "((((((((((((PAGESTATECHANED!  :  " + state);
+            }
+        });
+
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(vpPager);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+    public void refresh()
+    {
+        adapterViewPager.notifyDataSetChanged();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -46,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
+
         }
 
         // Returns total number of pages
@@ -54,12 +84,19 @@ public class MainActivity extends AppCompatActivity {
             return NUM_ITEMS;
         }
 
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
+        }
+
         // Returns the fragment to display for that page
         @Override
         public Fragment getItem(int position) {
+            Log.d("jihoonDebugging", "getITEM");
             switch (position) {
                 case 0:
                     return FirstFragment.newInstance(0, "Page # 1");
+                    //return FirstFragment.newInstance(0, "Page # 1");
                 case 1:
                     return SecondFragment.newInstance(1, "Page # 2");
                 case 2:
@@ -67,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return null;
             }
+        }
+        public static void refresh()
+        {
+
         }
 
         // Returns the page title for the top indicator
@@ -76,4 +117,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }

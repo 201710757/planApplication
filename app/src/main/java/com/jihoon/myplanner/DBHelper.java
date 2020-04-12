@@ -15,12 +15,15 @@ public class DBHelper extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE dateTodo (_id INTEGER PRIMARY KEY AUTOINCREMENT, year TEXT, month TEXT, day TEXT, title TEXT, todo TEXT);");
         db.execSQL("INSERT INTO dateTodo VALUES(1, 'year', 'month', 'day', 'title', 'todo');");
+        db.execSQL("CREATE TABLE totalTodo (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, todo TEXT, color INTEGER, done INTEGER)");
+        db.execSQL("INSERT INTO totalTodo VALUES(1, 'title', 'todo', -1, -1)");
         //db.execSQL("CREATE TABLE checkBox (name TEXT, phonenum TEXT, email TEXT, memo TEXT);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS dateTodo;");
+        db.execSQL("DROP TABLE IF EXISTS totalTodo");
         onCreate(db);
     }
 }

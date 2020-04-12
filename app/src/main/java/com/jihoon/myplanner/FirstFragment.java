@@ -3,6 +3,7 @@ package com.jihoon.myplanner;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,7 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,6 +57,8 @@ public class FirstFragment extends Fragment {
     private ListView listView;
     private ListViewAdapter adapter;
 
+
+
     // newInstance constructor for creating fragment with arguments
     public static FirstFragment newInstance(int page, String title) {
         FirstFragment fragment = new FirstFragment();
@@ -64,12 +69,17 @@ public class FirstFragment extends Fragment {
         return fragment;
     }
 
+
+
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
+        Log.d(TAG, "★ : ");
+
+
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -115,6 +125,9 @@ public class FirstFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         int resId = adapter.returnID(fuPosition);
                         deleteDB(LastYear, LastMonth, LastDay, resId);
+                        ((MainActivity)getActivity()).refresh();
+                        //Intent intent = new Intent(getContext(), MainActivity.class);
+                        //startActivity(intent);
                     }
                 });
 
@@ -166,11 +179,12 @@ public class FirstFragment extends Fragment {
         LastYear = res[0];
         LastMonth = res[1];
         LastDay = res[2];
+
         String[] lst = listUpdateCheckBox(res[0], res[1], res[2]);
         Log.d(TAG, "hi~ : " + res[0] + " " + res[1] + " " + res[2]);
         Log.d(TAG, "hh : " + lst[0] + " " + lst[1]);
         dateShow = (TextView)view.findViewById(R.id.textViewDate);
-        dateShow.setText("오늘 날짜 : "+ res[0] + "/" + res[1] + "/" + res[2]);
+        dateShow.setText("오늘 일정 : "+ res[0] + "/" + res[1] + "/" + res[2] + "(" + getDateday(res[0], res[1], res[2]) + ")");
         listUpdateCheckBox_(res[0], res[1], res[2]);
 
         Button okButton = (Button)view.findViewById(R.id.buttonok);
@@ -203,8 +217,8 @@ public class FirstFragment extends Fragment {
 
                         Log.d(TAG, "dd : " + tmpYear + " " + tmpMonth + " " + tmpDay);
                         if(tmpYear == dat[0] && tmpMonth == dat[1] && tmpDay == dat[2])
-                            dateShow.setText("(오늘) " + tmpYear + "/" + tmpMonth + "/" + tmpDay + " 일정 입니다");
-                        else dateShow.setText(tmpYear + "/" + tmpMonth + "/" + tmpDay + " 일정 입니다");
+                            dateShow.setText("(오늘) " + tmpYear + "/" + tmpMonth + "/" + tmpDay + "(" + getDateday(tmpYear, tmpMonth, tmpDay) + ")" + " 일정 입니다");
+                        else dateShow.setText(tmpYear + "/" + tmpMonth + "/" + tmpDay + "(" + getDateday(tmpYear, tmpMonth, tmpDay) + ")" + " 일정 입니다");
                         String[]res = listUpdateCheckBox(tmpYear, tmpMonth, tmpDay);
                         tmpTitle = res[0];
                         tmpTodo = res[1];
@@ -220,6 +234,14 @@ public class FirstFragment extends Fragment {
 
         return view;
     }
+
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return super.getLifecycle();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){//일정새로생성
@@ -268,6 +290,12 @@ public class FirstFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "FF _ ONATTACH");
+    }
+
 
     public void deleteDB(int year, int month, int day, int id)
     {
@@ -275,6 +303,7 @@ public class FirstFragment extends Fragment {
         String sql = String.format("DELETE FROM dateTodo WHERE year = '" + Integer.toString(year) + "' AND month = '" + Integer.toString(month) + "' AND day = '" + Integer.toString(day) + "' AND _id = '" + id + "';");
         db.execSQL(sql);
         listUpdateCheckBox_(LastYear, LastMonth,LastDay);
+        onResume();
     }
 
 
@@ -340,6 +369,24 @@ public class FirstFragment extends Fragment {
         res[2] = Integer.parseInt(day);
         return res;
     }
+    public String getDateday(int year, int month, int day)
+    {
+        String []dayy = {"일", "월", "화", "수", "목", "금", "토"};
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = ""+year+"-"+month+"-"+day;
+        Date nDate = null;
+        try {
+            nDate = dateFormat.parse(date);
+        }
+        catch (Exception e)
+        {
 
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nDate);
+
+        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+        return dayy[dayNum-1];
+    }
 
 }

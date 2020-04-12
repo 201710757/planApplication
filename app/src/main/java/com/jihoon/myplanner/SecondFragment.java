@@ -2,6 +2,7 @@ package com.jihoon.myplanner;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.text.DateFormat;
@@ -45,8 +47,6 @@ public class SecondFragment extends Fragment {
 
     String [] seven;
 
-
-
     // newInstance constructor for creating fragment with arguments
     public static SecondFragment newInstance(int page, String title) {
         SecondFragment fragment = new SecondFragment();
@@ -55,6 +55,12 @@ public class SecondFragment extends Fragment {
         args.putString("someTitle", title);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "SF_HI?ATTACH");
     }
 
     // Store instance variables based on arguments passed
@@ -72,62 +78,26 @@ public class SecondFragment extends Fragment {
         db = dbHelper.getWritableDatabase();
         adapter = new ListViewAdapter();
         listView = (ListView)view.findViewById(R.id.SF_listView);
-
         listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //
-                String[] res = adapter.returnRes(position);
-                int resId = adapter.returnID(position);
-                Log.d(TAG, "SF " + res[1] + " " + position);
-                Intent intent = new Intent(view.getContext(), PopupActivity.class);
-                intent.putExtra("TITLE", res[0]);
-                intent.putExtra("TODO", res[1]);
-                intent.putExtra("_ID", resId);
-                intent.putExtra("ST", position);
-                startActivityForResult(intent, 2);
-
-                Log.d(TAG, "SF request code : " + 2);
+                String _tmp_ = adapter.returnTitle(position); //토 2020/4/11
+                String __year_ = _tmp_.substring(2,6);
+                String __month_ = _tmp_.substring(7,9);
+                String __day_ = _tmp_.substring(10,12);
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //fuPosition = position;
-                AlertDialog.Builder alertdialog = new AlertDialog.Builder(view.getContext());
-                // 다이얼로그 메세지
-                alertdialog.setMessage("삭제하시겠습니까?");
-
-                // 확인버튼
-                alertdialog.setPositiveButton("네", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //int resId = adapter.returnID(fuPosition);
-                        //deleteDB(LastYear, LastMonth, LastDay, resId);
-                    }
-                });
-
-                // 취소버튼
-                alertdialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                // 메인 다이얼로그 생성
-                AlertDialog alert = alertdialog.create();
-                // 아이콘 설정
-                //alert.setIcon(R.drawable.ic_launcher);
-                // 타이틀
-                //alert.setTitle("");
-                // 다이얼로그 보기
-                alert.show();
 
                 return true;
             }
         });
+
+
         int[] res = returnDate();
         LastYear = res[0];
         LastMonth = res[1];
@@ -169,9 +139,24 @@ public class SecondFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "SF_HI?START");
+    }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Log.d(TAG, "SF_HI?RESUME");
+        listUpdateFunction(LastYear, LastMonth, LastDay);
+    }
+
     public void listUpdateFunction(int year, int month, int day)
     {
         adapter.Listclear();
+
+        //adapter.addItem("test","testset",99);
         String tmp = null;
         DateFormat df = null;
         Date settingTime = null;
@@ -179,7 +164,7 @@ public class SecondFragment extends Fragment {
         Calendar cal = null;
         String WeekDay = null;
         int dayW = 0;
-        String []dayy = {"토", "일", "월", "화", "수", "목", "금"};
+        String []dayy = {"일", "월", "화", "수", "목", "금", "토"};
         //7번실행 날짜바꿔서s
         try {
             cal = Calendar.getInstance();
@@ -194,11 +179,11 @@ public class SecondFragment extends Fragment {
             //cal.add(Calendar.DATE, 1);
 
             dayW = cal.get(Calendar.DAY_OF_WEEK);
-            WeekDay = dayy[dayW];
+            WeekDay = dayy[dayW-1];
         }
         catch (Exception e)
         {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, "SF hi?" + e.getMessage());
         }
 
 
@@ -209,8 +194,12 @@ public class SecondFragment extends Fragment {
                 String subYEAR = tmp.substring(0,4); // YEAR
                 String subMONTH = Integer.toString(Integer.parseInt(tmp.substring(5,7))); // MONTH
                 String subDAY = Integer.toString(Integer.parseInt(tmp.substring(8,10))); //DAY
+                String _subYear = tmp.substring(0,4);
+                String _subMonth = tmp.substring(5,7);
+                String _subDay = tmp.substring(8,10);
+
                 dayW = cal.get(Calendar.DAY_OF_WEEK);
-                WeekDay = dayy[dayW];
+                WeekDay = dayy[dayW-1];
 
                 Log.d(TAG, "SF database : " + subYEAR + " " + subMONTH + " " + subDAY);
                 cursor = db.rawQuery("SELECT _id, title, todo FROM dateTodo WHERE year = '" + subYEAR + "' AND month = '" + subMONTH + "' AND day = '" + subDAY + "' order by _id;", null);
@@ -246,8 +235,8 @@ public class SecondFragment extends Fragment {
                 if(!info.equals(""))
                 {
                     if(cnt == 3)
-                        adapter.addItem(WeekDay + " " + subYEAR + "/" + subMONTH + "/" + subDAY, info + "...", __id);
-                    else adapter.addItem(WeekDay + " " + subYEAR + "/" + subMONTH + "/" + subDAY, info.substring(0, info.length()-3), __id);
+                        adapter.addItem(_subYear + "/" + _subMonth + "/" + _subDay + " " + WeekDay, info + "...", __id);
+                    else adapter.addItem(_subYear + "/" + _subMonth + "/" + _subDay + " " + WeekDay, info.substring(0, info.length()-3), __id);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -259,6 +248,7 @@ public class SecondFragment extends Fragment {
             cal.add(Calendar.DATE, 1);
             tmp = df.format(cal.getTime()); //2020-04-10
             Log.d(TAG, "SF hello : " + tmp);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -307,6 +297,25 @@ public class SecondFragment extends Fragment {
         return tmp;
     }
 
+    public String getDateday(int year, int month, int day)
+    {
+        String []dayy = {"일", "월", "화", "수", "목", "금", "토"};
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = ""+year+"-"+month+"-"+day;
+        Date nDate = null;
+        try {
+            nDate = dateFormat.parse(date);
+        }
+        catch (Exception e)
+        {
+
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nDate);
+
+        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+        return dayy[dayNum-1];
+    }
 }
 
 
