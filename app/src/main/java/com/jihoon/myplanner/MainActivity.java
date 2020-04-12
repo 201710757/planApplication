@@ -105,10 +105,6 @@ public class MainActivity extends AppCompatActivity {
                     return null;
             }
         }
-        public static void refresh()
-        {
-
-        }
 
         // Returns the page title for the top indicator
         @Override
