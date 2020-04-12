@@ -1,6 +1,8 @@
 package com.jihoon.myplanner;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,6 +32,7 @@ public class ThirdFragment extends Fragment {
     private FT_ListViewAdapter adapter;
     private ListView listView;
 
+    int fuPosition;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -62,13 +65,63 @@ public class ThirdFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] res = adapter.returnRes(position);
+                int resId = adapter.returnID(position);
+                int colorId = adapter.returnColor(position);
+                Log.d(TAG, "" + res[1] + " " + position);
+                Intent intent = new Intent(view.getContext(), TF_PopupActivity.class);
+                Log.d(TAG, "★★★★★ : " + res[0] + " " + res[1]);
+                intent.putExtra("TITLE", res[0]);
+                intent.putExtra("TODO", res[1]);
+                intent.putExtra("_ID", resId);
+                intent.putExtra("COLOR", colorId);
+                intent.putExtra("ST", position);
+                //intent.putExtra("ST", position);
+                startActivityForResult(intent, 2);
+                ((MainActivity)getActivity()).refresh();
 
+                Log.d(TAG, "request code : " + 2);
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                
+                fuPosition = position;
+                AlertDialog.Builder alertdialog = new AlertDialog.Builder(view.getContext());
+                // 다이얼로그 메세지
+                alertdialog.setMessage("일정을 완료하시겠습니까?");
+
+                // 확인버튼
+                alertdialog.setNegativeButton("네", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int resId = adapter.returnID(fuPosition);
+                        //deleteDB(resId);//
+                        modifyDB(resId);
+                        //Intent intent = new Intent(getContext(), MainActivity.class);
+                        //startActivity(intent);
+                        ((MainActivity)getActivity()).refresh();
+                    }
+                });
+
+                // 취소버튼
+                alertdialog.setPositiveButton("아니요", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                // 메인 다이얼로그 생성
+                AlertDialog alert = alertdialog.create();
+                // 아이콘 설정
+                //alert.setIcon(R.drawable.ic_launcher);
+                // 타이틀
+                //alert.setTitle("");
+                // 다이얼로그 보기
+                alert.show();
+
+                ((MainActivity)getActivity()).refresh();
                 return true;
             }
         });
@@ -99,6 +152,7 @@ public class ThirdFragment extends Fragment {
                 String title = data.getStringExtra("TITLE");
                 String todo = data.getStringExtra("TODO");
                 int col = data.getIntExtra("COLOR", -1);
+                if(col == -1) return;
                 Log.d(TAG, "Hello Popup" + " Title : " + title + " todo : " + todo + " id : nooo");
 
                 Log.d(TAG, "COLOR HELLO" + " : " + title + " todo : " + todo + " id : " + col);
@@ -108,6 +162,35 @@ public class ThirdFragment extends Fragment {
 
                     //deleteDB(tmpYear, tmpMonth, tmpDay, id);
                     String sql = String.format("INSERT INTO totalTodo VALUES(null, '" + title + "','" + todo + "', " + col + ", 0);");
+                    //sql = "INSERT INTO totalTodo VALUES(null, 'titl1e', 'todo1', 1, 0)";
+                    db.execSQL(sql);
+                    Log.d(TAG, "SQL : " + sql);
+                }
+                catch (Exception e)
+                {
+                    Log.d(TAG, "Hello Error 33" + e.getMessage());
+                }//INSERT INTO dateTodo VALUES(null, '2020','4','12','f','fff');
+                listUpdateCheckBox_();
+                //listUpdateCheckBox_(LastYear,LastMonth,LastDay);
+            }
+        }
+        else if(requestCode == 2)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String title = data.getStringExtra("TITLE");
+                String todo = data.getStringExtra("TODO");
+                int col = data.getIntExtra("COLOR", -1);
+                int id = data.getIntExtra("ID", -1);
+                Log.d(TAG, "Hello Popup" + " Title : " + title + " todo : " + todo + " id : nooo");
+
+                Log.d(TAG, "COLOR HELLO" + " : " + title + " todo : " + todo + " id : " + col);
+
+
+                try {
+
+                    //deleteDB(tmpYear, tmpMonth, tmpDay, id);
+                    String sql = String.format("UPDATE totalTodo SET title = '" + title + "', todo = '" + todo + "', color = " + col + " WHERE _id = " + id);
                     //sql = "INSERT INTO totalTodo VALUES(null, 'titl1e', 'todo1', 1, 0)";
                     db.execSQL(sql);
                     Log.d(TAG, "SQL : " + sql);
@@ -149,7 +232,7 @@ public class ThirdFragment extends Fragment {
 
                     //CustomShowPlan n_layout1 = new CustomShowPlan(view.getContext().getApplicationContext(), __title, __todo, number);
                     Log.d(TAG, "COLOR : " + drawColor[__color-1] + " " + __title + " " + __todo);
-                    if(__done != 1) adapter.addItem(drawColor[__color-1], __title, __todo);
+                    if(__done != 1) adapter.addItem(drawColor[__color-1], __title, __todo, __id , __color);
                 }
                 catch (Exception e)
                 {
@@ -163,5 +246,18 @@ public class ThirdFragment extends Fragment {
         {
             Log.d(TAG, e.getMessage());
         }
+    }
+    public void deleteDB(int id)
+    {
+        //Log.d(TAG, "DELETE : " + year + " " + month + " " + day + " " + id);
+        String sql = String.format("DELETE FROM totalTodo WHERE _id = '" + id + "';");
+        db.execSQL(sql);
+        listUpdateCheckBox_();
+    }
+    public void modifyDB(int id)
+    {
+        String sql = String.format("UPDATE totalTodo SET done = 1 WHERE _id = " + id + ";");
+        db.execSQL(sql);
+        listUpdateCheckBox_();
     }
 }

@@ -124,7 +124,7 @@ public class SecondFragment extends Fragment {
                         seven = returnWeekDay();
 
                         if(LastYear == dat[0] && LastMonth == dat[1] && LastDay == dat[2])
-                            dateShow.setText("오늘부터 일주일간의 계획입니다. \n(" + seven[0] + " ~ " + seven[1] + "~)");
+                            dateShow.setText("오늘부터 일주일간의 계획입니다. \n(" + seven[0] + " ~ " + seven[1] + ")");
                         else dateShow.setText("일주일간의 계획입니다.\n" + seven[0] + " ~ " + seven[1]);
 
                         listUpdateFunction(LastYear, LastMonth, LastDay);

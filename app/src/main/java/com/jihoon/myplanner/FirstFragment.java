@@ -126,7 +126,6 @@ public class FirstFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         int resId = adapter.returnID(fuPosition);
                         deleteDB(LastYear, LastMonth, LastDay, resId);
-                        ((MainActivity)getActivity()).refresh();
                         //Intent intent = new Intent(getContext(), MainActivity.class);
                         //startActivity(intent);
                         ((MainActivity)getActivity()).refresh();
@@ -234,6 +233,7 @@ public class FirstFragment extends Fragment {
                 dialog.show();
             }
         });
+        //button.setBackground(getResources().getDrawable(R.drawable.calendar));
 
         return view;
     }

@@ -35,7 +35,8 @@ public class FT_ListViewAdapter extends BaseAdapter {
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.total_show_plan, parent, false);
+            //convertView = inflater.inflate(R.layout.total_show_plan, parent, false);
+            convertView = inflater.inflate(R.layout.test_show_plan, parent, false);
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
@@ -70,13 +71,37 @@ public class FT_ListViewAdapter extends BaseAdapter {
         listViewItemList = new ArrayList<>();
     }
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable icon, String title, String desc) {
+    public void addItem(Drawable icon, String title, String desc, int id, int color) {
         FT_ListViewItem item = new FT_ListViewItem();
 
         item.setIcon(icon);
         item.setTitle(title);
         item.setDesc(desc);
+        item.set_id(id);
+        item.setColor(color);
 
         listViewItemList.add(item);
+    }
+
+    // 그지같은 코드
+    public int returnID(int pos)
+    {
+        int res = listViewItemList.get(pos).get_id();
+        return res;
+    }
+    // 그지
+    public String returnTitle(int pos)
+    {
+        String res = listViewItemList.get(pos).getTitle();
+        return res;
+    }
+    public String[] returnRes(int pos)
+    {
+        String [] res = {listViewItemList.get(pos).getTitle(), listViewItemList.get(pos).getDesc()};
+        return res;
+    }
+    public int returnColor(int pos) // 1,2,3,4,5,6,7 형식으로 지정됨d
+    {
+        return listViewItemList.get(pos).getColor();
     }
 }

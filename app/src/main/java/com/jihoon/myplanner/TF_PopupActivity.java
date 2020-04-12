@@ -48,22 +48,31 @@ public class TF_PopupActivity extends Activity {
         radio[6] = findViewById(R.id.radioButtonPurple);
 
         final int _id = intent.getIntExtra("_ID",-1);
+        int color = intent.getIntExtra("COLOR", -1);
+        try
+        {
+            radio[color-1].toggle();
+        }
+        catch (Exception e)
+        {
+
+        }
         int st = intent.getIntExtra("ST", -1);
         title.setText(_title);
         todo.setText(_todo);
         if(st == 0)
-            notice.setText("First 일정");
+            notice.setText("First 목표");
         else if(st == 1)
-            notice.setText("Second 일정");
+            notice.setText("Second 목표");
         else if(st == 2)
-            notice.setText("Third 일정");
+            notice.setText("Third 목표");
         else if(st == -1) {
-            notice.setText("새 일정");
+            notice.setText("새 목표");
             title.setText("");
             todo.setText("");
         }
         else
-            notice.setText((st + 1) + "th 일정");
+            notice.setText((st + 1) + "th 목표");
 
         Button buttonOK = (Button)findViewById(R.id.ok);
         buttonOK.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +105,7 @@ public class TF_PopupActivity extends Activity {
                         intent.putExtra("TITLE", tmpTitle);
                         intent.putExtra("TODO", tmpTodo);
                         intent.putExtra("COLOR", rad);
+                        intent.putExtra("ID", _id);
 
                         Log.d(TAG, "&&&&&&&&&&&&&&&&&@@@@@@@@@@" + rad);
                         setResult(RESULT_OK, intent);

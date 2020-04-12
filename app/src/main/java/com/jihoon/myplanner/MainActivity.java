@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
 
-        vpPager.setCurrentItem(0);
+        vpPager.setCurrentItem(1);
         vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -94,12 +94,12 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             Log.d("jihoonDebugging", "getITEM");
             switch (position) {
-                case 0:
+                case 1:
                     return FirstFragment.newInstance(0, "Page # 1");
                     //return FirstFragment.newInstance(0, "Page # 1");
-                case 1:
-                    return SecondFragment.newInstance(1, "Page # 2");
                 case 2:
+                    return SecondFragment.newInstance(1, "Page # 2");
+                case 0:
                     return ThirdFragment.newInstance(2, "Page # 3");
                 default:
                     return null;
