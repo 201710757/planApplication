@@ -36,6 +36,7 @@ public class SecondFragment extends Fragment {
     private ListView listView;
     private ListViewAdapter adapter;
     String TAG = "jihoonDebugging";
+    String tag = "jihoondegugds";
     View view;
     private DatePickerDialog.OnDateSetListener callbackMethod;
     int LastYear, LastMonth, LastDay;
@@ -54,12 +55,14 @@ public class SecondFragment extends Fragment {
         args.putInt("someInt", page);
         args.putString("someTitle", title);
         fragment.setArguments(args);
+        Log.d("jihoonGood", "???");
         return fragment;
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        Log.d("jihoonGooddddddd", "11");
         Log.d(TAG, "SF_HI?ATTACH");
     }
 
@@ -67,13 +70,8 @@ public class SecondFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    // Inflate the view for the fragment based on layout XML
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_second, container, false);
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.fragment_second, null);
         dbHelper = new DBHelper(view.getContext(), 1);
         db = dbHelper.getWritableDatabase();
         adapter = new ListViewAdapter();
@@ -97,6 +95,7 @@ public class SecondFragment extends Fragment {
             }
         });
 
+        Log.d("jihoonGooddddddd", "44");
 
         int[] res = returnDate();
         LastYear = res[0];
@@ -104,11 +103,13 @@ public class SecondFragment extends Fragment {
         LastDay = res[2];
         dateShow = (TextView)view.findViewById(R.id.SF_textViewDate);
 
+        Log.d(tag, "SF_HI?CREATEVIEW");
 
         seven = returnWeekDay();
-        dateShow.setText("오늘부터 일주일간의 계획입니다. \n(" + seven[0] + " ~ " + seven[1] + "~)");
+        dateShow.setText("오늘부터 일주일간의 계획입니다. \n(" + seven[0] + " ~ " + seven[1] + ")");
         listUpdateFunction(LastYear, LastMonth, LastDay);
 
+        Log.d("jihoonGooddddddd", "55");
         Button button = (Button)view.findViewById(R.id.SF_buttonFirst);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +136,19 @@ public class SecondFragment extends Fragment {
                 dialog.show();
             }
         });
+    }
 
+    // Inflate the view for the fragment based on layout XML
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d("jihoonGooddddddd", "CREATESECOND");
+        Log.d("jihoonGoodd", "hi2?");
+        Log.d("jihoonGooddddddd", "33");
+
+
+
+        Log.d("jihoonGooddddddd", "66");
         return view;
     }
 
@@ -143,18 +156,29 @@ public class SecondFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.d(TAG, "SF_HI?START");
+        Log.d(tag, "SF_HI?START");
+        Log.d("jihoonGooddddddd", "77");
+
     }
+
+
     @Override
     public void onResume()
     {
         super.onResume();
-        Log.d(TAG, "SF_HI?RESUME");
+        Log.d(tag, "SF_HI?RESUME");
+        Log.d("jihoonGooddddddd", "88");
         listUpdateFunction(LastYear, LastMonth, LastDay);
+        Log.d("jihoonGooddddddd", "99");
     }
+
+
 
     public void listUpdateFunction(int year, int month, int day)
     {
+        Log.d("jihoonGooddddddd", "1010");
         adapter.Listclear();
+        Log.d(tag, "SF_HI?LISTUPDATE");
 
         //adapter.addItem("test","testset",99);
         String tmp = null;
@@ -238,6 +262,9 @@ public class SecondFragment extends Fragment {
                         adapter.addItem(_subYear + "/" + _subMonth + "/" + _subDay + " " + WeekDay, info + "...", __id);
                     else adapter.addItem(_subYear + "/" + _subMonth + "/" + _subDay + " " + WeekDay, info.substring(0, info.length()-3), __id);
                     adapter.notifyDataSetChanged();
+                    Log.d("jihoonkimn", "Second Frag List Update");
+
+                    Log.d("jihoonGood", "o3");
                 }
             }
             catch (Exception e)
@@ -248,8 +275,12 @@ public class SecondFragment extends Fragment {
             cal.add(Calendar.DATE, 1);
             tmp = df.format(cal.getTime()); //2020-04-10
             Log.d(TAG, "SF hello : " + tmp);
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();//여기 지워보자
+            Log.d("jihoonkimn", "Second Frag List Update2");
+
+            Log.d("jihoonGood", "o4");
         }
+        Log.d("jihoonGooddddddd", "1111");
     }
 
 
@@ -257,6 +288,7 @@ public class SecondFragment extends Fragment {
 
     public int[] returnDate()
     {
+        Log.d("jihoonGooddddddd", "1212");
         int[] res = new int[3];
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat weekdayFormat = new SimpleDateFormat("EE", Locale.getDefault());
@@ -277,6 +309,7 @@ public class SecondFragment extends Fragment {
 
     public String[] returnWeekDay()
     {
+        Log.d("jihoonGooddddddd", "1313");
         sf_cal1 = Calendar.getInstance();
         sf_df1 = new SimpleDateFormat("yyyy-MM-dd");
         try {

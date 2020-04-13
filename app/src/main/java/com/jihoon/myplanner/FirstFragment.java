@@ -38,6 +38,7 @@ public class FirstFragment extends Fragment {
     private String title;
     private int page;
     String TAG = "jihoonDebugging";
+    String Tag = "jidebuggi";
     private TextView textView_Date;
     private DatePickerDialog.OnDateSetListener callbackMethod;
     DBHelper dbHelper;
@@ -75,19 +76,8 @@ public class FirstFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
-        Log.d(TAG, "★ : ");
-
-
-    }
-
-    // Inflate the view for the fragment based on layout XML
-    View view;
-    @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_first, container, false);
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.fragment_first, null);
         dbHelper = new DBHelper(view.getContext(), 1);
         db = dbHelper.getWritableDatabase();
         adapter = new ListViewAdapter();
@@ -106,7 +96,8 @@ public class FirstFragment extends Fragment {
                 intent.putExtra("_ID", resId);
                 intent.putExtra("ST", position);
                 startActivityForResult(intent, 2);
-                ((MainActivity)getActivity()).refresh();
+                //((MainActivity)getActivity()).refresh();
+                Log.d(Tag, "createView");
 
                 Log.d(TAG, "request code : " + 2);
             }
@@ -129,6 +120,8 @@ public class FirstFragment extends Fragment {
                         //Intent intent = new Intent(getContext(), MainActivity.class);
                         //startActivity(intent);
                         ((MainActivity)getActivity()).refresh();
+                        Log.d("jihoonGoodd", "refFirst1");
+                        Log.d(Tag, "delete");
                     }
                 });
 
@@ -170,10 +163,9 @@ public class FirstFragment extends Fragment {
 
          */
         adapter.notifyDataSetChanged();
+        Log.d("jihoonkimn", "FirstCreateView");
 
-
-
-
+        Log.d("jihoonGood", "o1");
 
 
         int[] res = returnDate();
@@ -225,7 +217,7 @@ public class FirstFragment extends Fragment {
                         tmpTodo = res[1];
 
                         listUpdateCheckBox_(tmpYear, tmpMonth, tmpDay);
-                        ((MainActivity)getActivity()).refresh();
+                        //((MainActivity)getActivity()).refresh();
                     }
                 };
                 Log.d(TAG, "dd : " + dat[0] + " " + dat[1] + " " + dat[2]);
@@ -233,6 +225,21 @@ public class FirstFragment extends Fragment {
                 dialog.show();
             }
         });
+
+
+    }
+
+    // Inflate the view for the fragment based on layout XML
+    View view;
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d("jihoonGooddddddd", "LAST VALUE : " + LastYear + " " + LastMonth + " " + LastDay);
+        Log.d("jihoonGooddddddd", "CREATEFIRST");
+        Log.d("jihoonGoodd", "hi?");
+
+        Log.d("jihoonGooddddddd", "FUCK");
+
         //button.setBackground(getResources().getDrawable(R.drawable.calendar));
 
         return view;
@@ -267,7 +274,11 @@ public class FirstFragment extends Fragment {
                     Log.d(TAG, e.getMessage());
                 }
                 listUpdateCheckBox_(LastYear,LastMonth,LastDay);
+                Log.d("jihoonkimn", "FIRST FRAG REFRESH");
+
                 ((MainActivity)getActivity()).refresh();
+                Log.d("jihoonGoodd", "refFrist@");
+                Log.d(Tag, "createnew plan");
             }
         }
         else if(requestCode == 2)//일정수정 / 리스트 클릭해서 팝업띄웠을때
@@ -291,7 +302,8 @@ public class FirstFragment extends Fragment {
                     Log.d(TAG, e.getMessage());
                 }
                 listUpdateCheckBox_(LastYear, LastMonth,LastDay);
-                ((MainActivity)getActivity()).refresh();
+                //((MainActivity)getActivity()).refresh();
+                Log.d(Tag, "modify plan");
             }
         }
     }
@@ -334,7 +346,7 @@ public class FirstFragment extends Fragment {
             adapter.Listclear();
             //con.removeAllViews();
             //listView.removeAllViews();
-            Log.d(TAG, "database : " + year + " " + month + " ");
+            Log.d(TAG, "database a: " + year + " " + month + " " + day);
             cursor = db.rawQuery("SELECT _id, title, todo FROM dateTodo WHERE year = '" + year + "' AND month = '" + month + "' AND day = '" + day + "' order by _id;", null);
             //startManagingCursor(cursor);
             while (cursor.moveToNext())
@@ -348,6 +360,9 @@ public class FirstFragment extends Fragment {
                 //con.addView(n_layout1);
             }
             adapter.notifyDataSetChanged();
+            Log.d("jihoonkimn", "First ListView Update");
+
+            Log.d("jihoonGood", "o2");
         }
         catch (Exception e)
         {

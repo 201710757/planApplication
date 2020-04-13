@@ -1,6 +1,7 @@
 package com.jihoon.myplanner;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class ListViewAdapter extends BaseAdapter {
     public void Listclear()
     {
         listViewItemList = new ArrayList<>();
+        Log.d("jihoonkimn", "LISTVIEW ADAPTER CLEAR");
     }
 
     public void addItem(String title, String todo, int id)

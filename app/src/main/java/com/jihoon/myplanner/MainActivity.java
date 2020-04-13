@@ -21,7 +21,7 @@ import android.view.Window;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     FragmentPagerAdapter adapterViewPager;
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
     ViewPager vpPager;
@@ -38,22 +38,6 @@ public class MainActivity extends AppCompatActivity {
         vpPager.setAdapter(adapterViewPager);
 
         vpPager.setCurrentItem(1);
-        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-               //HERE!
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.d(TAG, "((((((((((((SELECTED! : " + position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                Log.d(TAG, "((((((((((((PAGESTATECHANED!  :  " + state);
-            }
-        });
 
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(vpPager);
@@ -67,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
     }
     public void refresh()
     {
+        Log.d("jihoonkimn1", "MAIN refresh");
+
         adapterViewPager.notifyDataSetChanged();
+
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -92,14 +79,18 @@ public class MainActivity extends AppCompatActivity {
         // Returns the fragment to display for that page
         @Override
         public Fragment getItem(int position) {
+            Log.d("FFoojj", "hi2?");
             Log.d("jihoonDebugging", "getITEM");
             switch (position) {
                 case 1:
+                    Log.d("jihoonGooddddddd", "HELLO1?");
                     return FirstFragment.newInstance(0, "Page # 1");
                     //return FirstFragment.newInstance(0, "Page # 1");
                 case 2:
+                    Log.d("jihoonGooddddddd", "HELLO2?");
                     return SecondFragment.newInstance(1, "Page # 2");
                 case 0:
+                    Log.d("jihoonGooddddddd", "HELLO3?");
                     return ThirdFragment.newInstance(2, "Page # 3");
                 default:
                     return null;
@@ -109,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
+            Log.d("jihoonGooddddddd", "HELLO?");
             return "Page " + position;
         }
 

@@ -2,6 +2,7 @@ package com.jihoon.myplanner;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +25,7 @@ import static android.app.Activity.RESULT_OK;
 public class ThirdFragment extends Fragment {
     // Store instance variables
     String TAG = "jihoonDebugging";
+    String tag = "jihoondeibd";
 
     DBHelper dbHelper;
     SQLiteDatabase db = null;
@@ -33,10 +35,12 @@ public class ThirdFragment extends Fragment {
     private ListView listView;
 
     int fuPosition;
+    View view;
 
 
     // newInstance constructor for creating fragment with arguments
     public static ThirdFragment newInstance(int page, String title) {
+        Log.d("jihoonGooddddddd", "1");
         ThirdFragment fragment = new ThirdFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
@@ -49,13 +53,9 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    // Inflate the view for the fragment based on layout XML
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_third, container, false);
+        view = inflater.inflate(R.layout.fragment_third, null);
         dbHelper = new DBHelper(view.getContext(), 1);
         db = dbHelper.getWritableDatabase();
 
@@ -78,7 +78,7 @@ public class ThirdFragment extends Fragment {
                 intent.putExtra("ST", position);
                 //intent.putExtra("ST", position);
                 startActivityForResult(intent, 2);
-                ((MainActivity)getActivity()).refresh();
+                //((MainActivity)getActivity()).refresh();
 
                 Log.d(TAG, "request code : " + 2);
             }
@@ -101,6 +101,7 @@ public class ThirdFragment extends Fragment {
                         //Intent intent = new Intent(getContext(), MainActivity.class);
                         //startActivity(intent);
                         ((MainActivity)getActivity()).refresh();
+                        Log.d("jihoonGoodd", "refThird");
                     }
                 });
 
@@ -121,12 +122,14 @@ public class ThirdFragment extends Fragment {
                 // 다이얼로그 보기
                 alert.show();
 
-                ((MainActivity)getActivity()).refresh();
+                //((MainActivity)getActivity()).refresh();
                 return true;
             }
         });
         adapter.notifyDataSetChanged();
+        Log.d("jihoonkimn", "Third Fragment createView");
 
+        Log.d("jihoonGood", "o7");
         Button button = (Button)view.findViewById(R.id.TF_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,11 +144,28 @@ public class ThirdFragment extends Fragment {
         });
         listUpdateCheckBox_();
 
+    }
+
+    // Inflate the view for the fragment based on layout XML
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d("jihoonGooddddddd", "3");
+        Log.d("jihoonGoodd", "hi1?");
+
+        Log.d("jihoonGooddddddd", "CREATETHIRD");
+
+
+
+        Log.d("jihoonGooddddddd", "4");
+
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d("jihoonGooddddddd", "5");
         if(requestCode==1){//일정새로생성
             if(resultCode==RESULT_OK){
                 //데이터 받기
@@ -176,6 +196,7 @@ public class ThirdFragment extends Fragment {
         }
         else if(requestCode == 2)
         {
+            Log.d("jihoonGooddddddd", "6");
             if(resultCode == RESULT_OK)
             {
                 String title = data.getStringExtra("TITLE");
@@ -207,9 +228,10 @@ public class ThirdFragment extends Fragment {
 
     public void listUpdateCheckBox_()
     {
+        Log.d("jihoonGooddddddd", "7");
         try {
             adapter.Listclear();
-            cursor = db.rawQuery("SELECT * FROM totalTodo WHERE _id > 1 order by _id;", null);
+            cursor = db.rawQuery("SELECT * FROM totalTodo order by _id;", null);
             //startManagingCursor(cursor);
             while (cursor.moveToNext())
             {
@@ -241,11 +263,16 @@ public class ThirdFragment extends Fragment {
                 //con.addView(n_layout1);
             }
             adapter.notifyDataSetChanged();
+            Log.d("jihoonkimn", "Third Fragment List Update");
+
+            Log.d("jihoonGooddddddd", "8");
+            Log.d("jihoonGood", "o8");
         }
         catch (Exception e)
         {
             Log.d(TAG, e.getMessage());
         }
+        Log.d("jihoonGooddddddd", "9");
     }
     public void deleteDB(int id)
     {
@@ -256,8 +283,10 @@ public class ThirdFragment extends Fragment {
     }
     public void modifyDB(int id)
     {
+        Log.d("jihoonGooddddddd", "10");
         String sql = String.format("UPDATE totalTodo SET done = 1 WHERE _id = " + id + ";");
         db.execSQL(sql);
         listUpdateCheckBox_();
+        Log.d("jihoonGooddddddd", "11");
     }
 }
